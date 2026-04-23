@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Green Dot{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1>Login</h1>
+
+  <!--Flash Messages to show errors-->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="card flash-card">
+        {% for category, msg in messages %}
+          <p class="{% if category == 'error' %}text-error{% else %}text-success{% endif %}">
+            {{ msg }}
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="card">
+    <form method="POST" action="{{ url_for('login', next=next_url) }}">
+      
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <button class="btn" type="submit">Login</button>
+      <a class="btn secondary" href="{{ url_for('home') }}">Cancel</a>
+
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

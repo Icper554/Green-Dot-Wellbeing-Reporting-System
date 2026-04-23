@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Report - Green Dot{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Report</h1>
+  <p>Please choose an option below.</p>
+
+  <div class="card">
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <a class="btn" href="{{ url_for('report_form') }}">Make a Report</a>
+      <a class="btn secondary" href="{{ url_for('track') }}">Check Report Status</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

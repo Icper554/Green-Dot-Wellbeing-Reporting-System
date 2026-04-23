@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Home Green Dot{% endblock %}
+
+{% block content %}
+
+{% if session.get("user_id") %}
+<p class="muted" style="font-size:20px; margin-bottom:12px;">
+  Hello, <b>{{ session.get("username") }}</b>
+</p>
+{% endif %}
+
+<div class="hero" style="padding:30px;">
+  <h1>Green Dot Wellbeing Reporting</h1>
+  <p class="muted" style="max-width: 720px;">
+    Confidential reporting aligned with the Green Dot Active Bystander approach.
+    Submit concerns safely and access wellbeing support resources.
+  </p>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+    <a class="btn" href="{{ url_for('report_form') }}">Submit a Report</a>
+    <a class="btn secondary" href="{{ url_for('resources') }}">Wellbeing Resources</a>
+  </div>
+</div>
+
+<!--Image-->
+<div style="margin-top:16px; text-align:center;">
+
+  <img 
+    src="{{ url_for('static', filename='images/group_of_students.jpg') }}"
+    alt="Group of students"
+    style="max-width: 50%; max-height: 500px;"
+  >
+
+  <p class="muted" style="margin-top:10px; margin-bottom:0;">
+    A safer university environment starts with awareness, support, and action.
+  </p>
+
+</div>
+
+<div style="background:#f3f7f4; padding:20px; border-radius:12px; margin-top:20px;">
+  <!--what is Greendot and Brief explaination on how the system works-->
+  <div class="grid-2" style="margin-top:16px;">
+
+    <div class="card">
+      <h2 style="margin-top:0;">What is Green Dot?</h2>
+      <p class="muted" style="margin-bottom:0;">
+        Green Dot encourages individuals to recognise situations where someone
+        may be at risk and take safe action. By speaking up, supporting others,
+        or reporting concerns, members of the university community can help
+        create a safer and more respectful environment for everyone.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;">How this system works</h2>
+      <ol style="margin:0; padding-left:18px;">
+        <li>Submit a report (anonymous option available).</li>
+        <li>Receive a unique reference ID.</li>
+        <li>The wellbeing/admin team reviews and updates the report status.</li>
+        <li>You can track updates anytime using your reference ID.</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!--Why Reporting Matters-->
+  <div class="card" style="margin-top:16px;">
+    <h2 style="margin-top:0;">Why reporting matters</h2>
+
+    <p class="muted">
+      Reporting concerns helps universities respond earlier, support those who
+      may be affected, and prevent situations from escalating. Even if you are
+      unsure whether something should be reported, raising a concern can help
+      wellbeing teams provide guidance and connect individuals with the right
+      support services.
+    </p>
+
+    <ul style="padding-left:18px; margin-bottom:0;">
+      <li>Helps prevent situations from escalating</li>
+      <li>Supports students and staff who may be experiencing harm</li>
+      <li>Encourages a safer and more respectful campus community</li>
+    </ul>
+  </div>
+</div>
+
+<!--what it means to be an Active Bystander-->
+<div class="card" style="margin-top:16px;">
+  <h2 style="margin-top:0;">Being an Active Bystander</h2>
+
+  <p class="muted">
+    An active bystander is someone who recognises situations where another
+    person may be at risk and chooses to take safe action. Small actions
+    such as checking in on someone, speaking up, or seeking help
+    from staff or support services can prevent situations from escalating.
+  </p>
+
+  <p class="muted">
+    You do not have to intervene directly if it is unsafe. Supporting others,
+    raising awareness, and reporting concerns are all ways of contributing
+    to a safer and more respectful university community.
+  </p>
+
+  <div class="grid-2" style="margin-top:12px;">
+
+    <div>
+      <h3 style="margin-bottom:6px;">Recognise</h3>
+      <p class="muted">
+        Pay attention to situations where someone may feel uncomfortable
+        or unsafe.
+      </p>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:6px;">Support</h3>
+      <p class="muted">
+        Ask if someone is okay and offer support if they appear distressed
+        or uncomfortable.
+      </p>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:6px;">Seek help</h3>
+      <p class="muted">
+        If you are unsure what to do, seek help from staff, security,
+        or trusted individuals.
+      </p>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:6px;">Report</h3>
+      <p class="muted">
+        Use reporting tools like this system to raise concerns so that
+        support services can respond appropriately.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
