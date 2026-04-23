@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+  <title>View Report</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+  {% if report %}
+    <h1>Report: {{ report.report_code }}</h1>
+
+    
+    <div class="card">
+      <p><b>Anonymous:</b> {{ "Yes" if report.anonymous else "No" }}</p>
+
+      {% if report.anonymous %}
+        <p><b>Reporter Name:</b> <i>Not provided (Anonymous)</i></p>
+        <p><b>Reporter Email:</b> <i>Not provided (Anonymous)</i></p>
+        <p><b>Reporter Phone:</b> <i>Not provided (Anonymous)</i></p>
+      {% else %}
+        <p><b>Reporter Name:</b> {{ report.reporter_name or "-" }}</p>
+        <p><b>Reporter Email:</b> {{ report.reporter_email or "-" }}</p>
+        <p><b>Reporter Phone:</b> {{ report.reporter_phone or "-" }}</p>
+      {% endif %}
+      
+      <p><b>Report for:</b> {{ report.report_for }}</p>
+
+      <p><b>Reporter Connection:</b>
+        {% if report.connection %}
+          {{ report.connection }}
+          {% if report.connection == "Other" and report.connection_other %}
+            ({{ report.connection_other }})
+          {% endif %}
+        {% else %}
+          <i>Not provided (Anonymous)</i>
+        {% endif %}
+      </p>
+
+      <p><b>Subject Connection:</b>
+        {% if report.report_for == "Behalf of someone" %}
+          {{ report.subject_connection or "-" }}
+          {% if report.subject_connection == "Other" and report.subject_connection_other %}
+            ({{ report.subject_connection_other }})
+          {% endif %}
+        {% else %}
+          -
+        {% endif %}
+      </p>
+
+      <p><b>Incident Date:</b> {{ report.incident_date or "-" }}</p>
+      
+      <p><b>Incident Time:</b> {{ report.incident_time or "-" }}</p>
+
+      <p><b>Location:</b>
+        {{ report.location }}
+        {% if report.location == "Other" and report.location_other %}
+          ({{ report.location_other }})
+        {% endif %}
+      </p>
+
+      <p><b>Category:</b>
+        {{ report.category }}
+        {% if report.category == "Other" and report.category_other %}
+          ({{ report.category_other }})
+        {% endif %}
+      </p>
+
+      <p><b>Priority:</b> {{ report.priority }}</p>
+      
+      <p><b>Status:</b></p>
+        <!--Update Report Status Route-->
+        <form method="POST" action="{{ url_for('update_status', report_code=report.report_code) }}" style="margin-bottom:12px;">
+          <!--keep current page path so user return to the same page after update-->
+          <input type="hidden" name="next" value="{{ request.full_path }}">
+
+          <select name="status" onchange="this.form.submit()" style="max-width:220px;">
+            <option value="Received" {% if report.status == 'Received' %}selected{% endif %}>Received</option>
+            <option value="In Progress" {% if report.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+            <option value="Resolved" {% if report.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+            <option value="Closed" {% if report.status == 'Closed' %}selected{% endif %}>Closed</option>
+          </select>
+        </form>
+      <p><b>Submitted At:</b> {{ report.created_at.strftime("%d %b %Y — %H:%M") }}</p>
+
+      <p><b>Description:</b></p>
+      <div style="white-space: pre-wrap;">{{ report.description }}</div>
+
+      {% if report.evidence_path %}
+        <p><b>Evidence:</b></p>
+        <img
+          src="{{ url_for('static', filename=report.evidence_path) }}"
+          style="max-width: 400px; border: 1px solid #ccc; padding: 5px;"
+          alt="Evidence"
+        >
+      {% endif %}
+    </div>
+
+  {% else %}
+    <p>Report not found.</p>
+  {% endif %}
+
+  <a class="btn secondary" href="{{ next_url if next_url else url_for('admin_dashboard') }}">Back</a>
+</div>
+
+
+<hr style="margin: 22px 0; border: none; border-top: 1px solid #eee;">
+
+<h3>Admin Updates</h3>
+
+<!--Text box for admin to post update messages-->
+<form method="POST" action="{{ url_for('add_update', report_code=report.report_code) }}" class="card" style="margin-bottom:14px;">
+  <input type="hidden" name="next" value="{{ request.full_path }}">
+
+  <label for="message">Post an update</label>
+  <textarea
+    id="message"
+    name="message"
+    rows="4"
+    minlength="2"
+    required
+    placeholder="Write an update that the reporter can see..."
+  ></textarea>
+
+  <button class="btn" type="submit">Post Update</button>
+</form>
+
+<!--Check if there are any message posted by admin-->
+{% if updates and updates|length > 0 %}
+  <div class="card">
+    <h4 style="margin-top:0;">Previous Updates</h4>
+
+    <!--Loops through each update in update list-->
+    {% for u in updates %}
+      <div style="padding:10px 0; border-bottom:1px solid #eee;">
+        <div class="muted" style="font-size:0.9rem;">
+          {{ u.created_at.strftime("%d %b %Y — %H:%M") }}
+          {% if u.created_by %} — {{ u.created_by }}{% endif %}
+        </div>
+
+        <div style="white-space: pre-wrap; margin-top:6px;">
+          {{ u.message }}
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+{% else %}
+  <p class="muted">No updates posted yet.</p>
+{% endif %}
+
+
+</body>
+</html>
