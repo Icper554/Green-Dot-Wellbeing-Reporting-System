@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Report Confirmation | Green Dot{% endblock %}
+
+{% block content %}
+  <div class="card" style="max-width: 720px; margin: 0 auto;">
+    <h1 style="margin-top:0;">Report Submitted ✅</h1>
+
+    <p>Your reference ID is:</p>
+
+    <h2 class="code">{{ report_code }}</h2>
+
+    {% if anonymous == 1 %}
+      <p class="muted" style="margin-top:15px;">
+        Your report has been securely submitted and will be reviewed by the wellbeing team.
+      </p>
+
+      <p class="muted">
+        Because this report was submitted anonymously, we are unable to contact you directly.
+        Please keep your reference ID safe, as you will need it to track the status of your report
+        and view any updates posted by the wellbeing team.
+      </p>
+    {% else %}
+      <p class="muted" style="margin-top:15px;">
+        Your report has been securely submitted and will be reviewed by the wellbeing team.
+      </p>
+
+      <p class="muted">
+        If there are any updates regarding your report, the wellbeing team may contact you
+        using the details you supplied.
+      </p>
+
+      <p class="muted">
+        You can also track the progress of your report at any time using the reference ID shown above.
+      </p>
+
+      <p class="muted">
+        A confirmation email with your reference ID has been sent to your provided email address.
+        Please check your junk or spam folder if you cannot find the email.
+      </p>
+    {% endif %}
+
+    <p class="muted">
+      If this is an emergency or someone is in immediate danger, please contact emergency services immediately.
+    </p>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn" href="{{ url_for('home') }}">Back to Home</a>
+      <a class="btn secondary" href="{{ url_for('report_form') }}">Submit Another Report</a>
+    </div>
+  </div>
+{% endblock %}

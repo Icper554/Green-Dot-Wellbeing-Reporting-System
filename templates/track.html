@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Track Report - Green Dot{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <h1>Track Report Status</h1>
+  <p>Enter your reference ID to view the current status.</p>
+
+  <!--Flash message to show errors-->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="card flash-card">
+        {% for category, msg in messages %}
+          <p class="{% if category=='error' %}text-error{% else %}text-success{% endif %}">
+            {{ msg }}
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!--Enter Reference ID Box-->
+  <div class="card">
+    <form method="POST">
+      <label for="report_code">Reference ID</label>
+      
+      <!--Input for Unique Reference ID-->
+      <input
+        type="text"
+        id="report_code"
+        name="report_code"
+        placeholder="e.g. GD-2026-000001"
+        value="{{ report_code }}"
+        required
+      >
+
+      <!--Button to submit and check report-->
+      <button class="btn" type="submit">Check Status</button>
+    </form>
+  </div>
+
+
+  {% if report %}
+    <div class="card" style="margin-top:16px;">
+      <h2 style="margin-top:0;">{{ report.report_code }}</h2>
+
+      <p><b>Current Status:</b> {{ report.display_status }}</p>
+      
+      <p><b>Submitted:</b> {{ report.created_at }}</p>
+
+      {% set steps = ["Sent","Received","In Progress","Resolved","Closed"] %}
+      
+      {% set current = report.display_status %}
+
+      <!--Visual Progress Bar of report status-->
+      <div class="stepper" style="margin-top:14px;">
+        
+        {% for s in steps %}
+          {% set state = "upcoming" %}
+
+          <!--find current status of the report-->
+          {% if current not in steps %}
+            {% set current_index = 0 %}
+          {% else %}
+            {% set current_index = steps.index(current) %}
+          {% endif %}
+
+          <!--mark the status as complete-->
+          {% if loop.index0 < current_index %}
+            {% set state = "done" %}
+          
+          <!--Mark the current status-->  
+            {% elif s == current %}
+            {% set state = "current" %}
+          {% endif %}
+
+          <!--CSS for each status displayed-->
+          <div class="step {{ state }}">
+            <div class="dot"></div>
+            <div class="label">{{ s }}</div>
+          </div>
+
+          <!--Drawing lines between each report status-->
+          {% if not loop.last %}
+            <div class="line {{ state }}"></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <p style="margin-top:14px; font-size:0.95rem;">
+        <b>Note:</b> If you submitted anonymously, you will not receive direct messages.
+        Please use your reference ID to check updates.
+      </p>
+    </div>
+
+    <hr style="margin: 22px 0; border: none; border-top: 1px solid #eee;">
+
+    <h3 style="margin-top:0;">Updates from Wellbeing Team</h3>
+
+    <!--cheks if any posted updates exist for the report-->
+    {% if updates and updates|length > 0 %}
+      <div class="card">
+        {% for u in updates %}
+          <div style="padding:10px 0; border-bottom: 1px solid #eee;">
+            <div class="muted" style="font-size: 0.9rem;">{{ u.created_at.strftime("%d %b %Y — %H:%M") }}</div>
+            <div style="white-space: pre-wrap; margin-top:6px;">{{ u.message }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <!--If no Posted Update found for the report-->
+    {% else %}
+      <p class="muted">No updates have been posted yet.</p>
+    {% endif %}
+
+  {% endif %}
+
+</div>
+{% endblock %}
